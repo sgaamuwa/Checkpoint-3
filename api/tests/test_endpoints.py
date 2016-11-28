@@ -14,28 +14,37 @@ class TestAuthentication(test_setup.BaseTestCase):
         self.assertEqual(User.objects.count(), 2)
         response = self.client.post(
             "/auth/register",
-            {"username": "samuel", "password": "pass123"},
+            {"username": "monreal", "password": "pass123"},
             format="json"
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(User.objects.count(), 3)
 
+    def test_register_existent_user(self):
+        """test cant register a user that already exists"""
+        self.assertEqual(User.objects.count(), 2)
+        response = self.client.post(
+            "/auth/register",
+            {"username": "samuel", "password": "pass123"},
+            format="json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(
+            {'username': ['Username already exists']},
+            response.data
+        )
+        self.assertEqual(User.objects.count(), 2)
+
     def test_register_user_no_data(self):
         response = self.client.post(
             "/auth/register",
-            {"username": "samuel", "password": "pass123"},
+            {"username": "", "password": ""},
             format="json"
         )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_login_user(self):
         """test that a created user can log into the system"""
-        # create a user
-        response = self.client.post(
-            "/auth/register",
-            {"username": "samuel", "password": "pass123"},
-            format="json"
-        )
         # login the user
         response = self.client.post(
             "/auth/login",
@@ -47,27 +56,27 @@ class TestAuthentication(test_setup.BaseTestCase):
     def test_login_unregistered_user(self):
         """test that cant login unregistered users"""
         response = self.client.post(
-            "/auth/register",
-            {"username": "monreal", "password": "pass123"},
+            "/auth/login",
+            {'username': 'monreal', 'password': 'pass123'},
             format="json"
         )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_login_with_bad_data(self):
         """test cant login without correct credentials"""
         response = self.client.post(
-            "/auth/register",
+            "/auth/login",
             {"username": "samuel", "password": "pass"},
             format="json"
         )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         # test login without data
         response = self.client.post(
-            "/auth/register",
+            "/auth/login",
             {"username": "", "password": ""},
             format="json"
         )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
 class TestBucketlists(test_setup.BaseTestCase):
@@ -144,7 +153,7 @@ class TestBucketlists(test_setup.BaseTestCase):
             {"name": "new_bucketlist"},
             format="json"
         )
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_update_bucketlist_with_no_data(self):
         """test that a bucketlist in the database can be updated"""
@@ -161,7 +170,7 @@ class TestBucketlists(test_setup.BaseTestCase):
         response = self.client.delete(
             "/bucketlists/1"
         )
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Bucketlist.objects.count(), 1)
 
     def test_delete_bucketlist_unauthorized(self):
@@ -243,8 +252,8 @@ class TestBucketlistItems(test_setup.BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # test updating done status
         response = self.client.put(
-            "/bucketlists/1/items/",
-            {"done": "true"},
+            "/bucketlists/1/items/1",
+            {"done": True},
             format="json"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -252,7 +261,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
     def test_update_bucketlistitem_wrong_bucketlist(self):
         """test cant update a bucketlistitem if bucketlist is wrong"""
         response = self.client.put(
-            "/bucketlists/11/items/1",
+            "/bucketlists/2/items/1",
             {"name": "new_item"},
             format="json"
         )
@@ -299,5 +308,5 @@ class TestBucketlistItems(test_setup.BaseTestCase):
         response = self.client.delete(
             "/bucketlists/1/items/1"
         )
-        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Item.objects.count(), 1)
