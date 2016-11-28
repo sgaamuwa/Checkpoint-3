@@ -59,6 +59,7 @@ class BucketlistItemSerializer(serializers.ModelSerializer):
 class BucketlistSerializer(serializers.ModelSerializer):
     items = BucketlistItemSerializer(many=True, read_only=True)
     name = serializers.CharField(max_length=100)
+    created_by = serializers.ReadOnlyField(source='created_by.id')
 
     def validate_name(self, value):
         """validation method for the name of the Bucketlist
