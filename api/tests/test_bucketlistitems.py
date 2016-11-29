@@ -69,6 +69,19 @@ class TestBucketlistItems(test_setup.BaseTestCase):
         self.assertEqual({'detail': 'Not found.'}, response.data)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_create_bucketlistitem_with_short_name(self):
+        """test cant create item with a name less than 2 characters"""
+        response = self.client.post(
+            "/bucketlists/1/items/",
+            {"name": "d"},
+            format="json"
+        )
+        self.assertEqual(
+            {'name': ['Name is too short']},
+            response.data
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_update_bucketlistitem(self):
         """test that a bucketlist item can be updated"""
         response = self.client.put(

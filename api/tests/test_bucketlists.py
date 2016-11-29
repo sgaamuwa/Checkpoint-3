@@ -46,6 +46,32 @@ class TestBucketlists(test_setup.BaseTestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+    def test_create_bucketlist_with_short_name(self):
+        """Test cant create a bucketlist with a name less than 2 Characters"""
+        response = self.client.post(
+            "/bucketlists/",
+            {"name": "d"},
+            format="json"
+        )
+        self.assertEqual(
+            {'name': ['Name is too short']},
+            response.data
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_create_bucketlist_that_exists(self):
+        """test cant create bucketlists with the same names"""
+        response = self.client.post(
+            "/bucketlists/",
+            {"name": "test_bucketlist_1"},
+            format="json"
+        )
+        self.assertEqual(
+            {'name': ['Name already exists']},
+            response.data
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_list_bucketlists(self):
         """test that bucketlists in the database can be retrieved"""
         response = self.client.get("/bucketlists/")
