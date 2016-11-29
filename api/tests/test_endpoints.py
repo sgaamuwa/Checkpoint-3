@@ -41,6 +41,13 @@ class TestAuthentication(test_setup.BaseTestCase):
             {"username": "", "password": ""},
             format="json"
         )
+        self.assertEqual(
+            {
+                'password': ['This field may not be blank.'],
+                'username': ['This field may not be blank.']
+            },
+            response.data
+        )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_login_user(self):
@@ -60,6 +67,10 @@ class TestAuthentication(test_setup.BaseTestCase):
             {'username': 'monreal', 'password': 'pass123'},
             format="json"
         )
+        self.assertEqual(
+            ['Unable to log in with provided credentials.'],
+            response.data["non_field_errors"]
+        )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_login_with_bad_data(self):
@@ -69,12 +80,23 @@ class TestAuthentication(test_setup.BaseTestCase):
             {"username": "samuel", "password": "pass"},
             format="json"
         )
+        self.assertEqual(
+            ['Unable to log in with provided credentials.'],
+            response.data["non_field_errors"]
+        )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         # test login without data
         response = self.client.post(
             "/auth/login",
             {"username": "", "password": ""},
             format="json"
+        )
+        self.assertEqual(
+            {
+                'password': ['This field may not be blank.'],
+                'username': ['This field may not be blank.']
+            },
+            response.data
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -102,6 +124,10 @@ class TestBucketlists(test_setup.BaseTestCase):
             "/bucketlists/",
             {"name": "new_bucketlist"},
             format="json"
+        )
+        self.assertEqual(
+            {'detail': 'Authentication credentials were not provided.'},
+            response.data
         )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
@@ -186,7 +212,11 @@ class TestBucketlists(test_setup.BaseTestCase):
         response = self.client_2.delete(
             "/bucketlists/1"
         )
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(
+            {'detail': 'You do not have permission to perform this action.'},
+            response.data
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
 
 class TestBucketlistItems(test_setup.BaseTestCase):
@@ -212,6 +242,10 @@ class TestBucketlistItems(test_setup.BaseTestCase):
             {"name": ""},
             format="json"
         )
+        self.assertEqual(
+            {'name': ['This field may not be blank.']},
+            response.data
+        )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_bucketlistitem_unauthorized(self):
@@ -231,7 +265,11 @@ class TestBucketlistItems(test_setup.BaseTestCase):
             {"name": "new_item"},
             format="json"
         )
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(
+            {'detail': 'You do not have permission to perform this action.'},
+            response.data
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_create_bucketlistitem_for_non_existent_bucketlist(self):
         """test cant create item if bucketlist does not exist"""
@@ -251,7 +289,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # test updating done status
-        response = self.client.put(
+        response = self.client.patch(
             "/bucketlists/1/items/1",
             {"done": True},
             format="json"
@@ -261,11 +299,12 @@ class TestBucketlistItems(test_setup.BaseTestCase):
     def test_update_bucketlistitem_wrong_bucketlist(self):
         """test cant update a bucketlistitem if bucketlist is wrong"""
         response = self.client.put(
-            "/bucketlists/2/items/1",
+            "/bucketlists/11/items/1",
             {"name": "new_item"},
             format="json"
         )
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual({'detail': 'Not found.'}, response.data)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_update_bucketlistitem_not_owner(self):
         """test cant update a bucketlist item if not owner"""
@@ -274,7 +313,11 @@ class TestBucketlistItems(test_setup.BaseTestCase):
             {"name": "new_item"},
             format="json"
         )
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(
+            {'detail': 'You do not have permission to perform this action.'},
+            response.data
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_update_bucketlistitem_unauthorized(self):
         """test cant update a bucketlist item if not authentication"""
@@ -296,7 +339,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         # test updating done status
         response = self.client.put(
-            "/bucketlists/1/items/",
+            "/bucketlists/1/items/1",
             {"done": ""},
             format="json"
         )
