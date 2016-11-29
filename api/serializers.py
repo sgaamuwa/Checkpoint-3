@@ -1,7 +1,6 @@
 from api.models import Bucketlist, Item
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from rest_framework.validators import UniqueTogetherValidator
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -29,10 +28,20 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ("username", "password")
+        extra_kwargs = {"password": {"write_only": True}}
+
+    def create(self, validated_data):
+        password = validated_data.pop('password', None)
+        instance = User(**validated_data)
+        if password is not None:
+            instance.set_password(password)
+        instance.save()
+        return instance
 
 
 class BucketlistItemSerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=100)
+    done = serializers.BooleanField(default=False)
 
     def validate_name(self, value):
         """validation method for the name of the Bucketlist Item
@@ -46,14 +55,7 @@ class BucketlistItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Item
-        fields = "__all__"
-        # it might be risky to do this
-        validators = [
-            UniqueTogetherValidator(
-                queryset=Item.objects.all(),
-                fields=("bucketlist", "name")
-            )
-        ]
+        fields = ("id", "name", "date_created", "date_modified", "done")
 
 
 class BucketlistSerializer(serializers.ModelSerializer):
@@ -76,9 +78,3 @@ class BucketlistSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bucketlist
         fields = "__all__"
-        validators = [
-            UniqueTogetherValidator(
-                queryset=Bucketlist.objects.all(),
-                fields=("created_by", "name")
-            )
-        ]
