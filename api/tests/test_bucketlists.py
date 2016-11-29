@@ -40,6 +40,10 @@ class TestBucketlists(test_setup.BaseTestCase):
             {"name": ""},
             format="json"
         )
+        self.assertEqual(
+            {'name': ['This field may not be blank.']},
+            response.data
+        )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_list_bucketlists(self):
@@ -51,6 +55,10 @@ class TestBucketlists(test_setup.BaseTestCase):
         """test cant retrieve bucketlists if unauthorized"""
         self.client.credentials()
         response = self.client.get("/bucketlists/")
+        self.assertEqual(
+            {'detail': 'Authentication credentials were not provided.'},
+            response.data
+        )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_bucketlist(self):
@@ -62,6 +70,10 @@ class TestBucketlists(test_setup.BaseTestCase):
         """test cant get a singular database if unauthorized"""
         self.client.credentials()
         response = self.client.get("/bucketlists/1")
+        self.assertEqual(
+            {'detail': 'Authentication credentials were not provided.'},
+            response.data
+        )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_update_bucketlist(self):
@@ -71,7 +83,21 @@ class TestBucketlists(test_setup.BaseTestCase):
             {"name": "new_bucketlist"},
             format="json"
         )
+        self.assertEqual('new_bucketlist', response.data["name"])
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_update_bucketlist_not_owner(self):
+        """test cant update a bucketlist if not the owner"""
+        response = self.client_2.put(
+            "/bucketlists/1",
+            {"name": "new_bucketlist"},
+            format="json"
+        )
+        self.assertEqual(
+            {'detail': 'You do not have permission to perform this action.'},
+            response.data
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
     def test_update_bucketlist_unauthorized(self):
         """test cant update a bucketlist if unauthorized"""
@@ -81,6 +107,10 @@ class TestBucketlists(test_setup.BaseTestCase):
             {"name": "new_bucketlist"},
             format="json"
         )
+        self.assertEqual(
+            {'detail': 'Authentication credentials were not provided.'},
+            response.data
+        )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_update_bucketlist_with_no_data(self):
@@ -89,6 +119,10 @@ class TestBucketlists(test_setup.BaseTestCase):
             "/bucketlists/1",
             {"name": ""},
             format="json"
+        )
+        self.assertEqual(
+            {'name': ['This field may not be blank.']},
+            response.data
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
@@ -106,6 +140,10 @@ class TestBucketlists(test_setup.BaseTestCase):
         self.client.credentials()
         response = self.client.delete(
             "/bucketlists/1"
+        )
+        self.assertEqual(
+            {'detail': 'Authentication credentials were not provided.'},
+            response.data
         )
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
