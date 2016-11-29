@@ -1,0 +1,13 @@
+[report]
+omit =
+    manage.py
+    */python?.?/*
+    *site-packages/*
+    *__init__*
+    *tests/*
+    *migrations/*
+exclude_lines =
+    make_shell_context
+
+[html]
+directory = coverage_html

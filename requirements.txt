@@ -1,8 +1,8 @@
 coverage==4.2
-coveralls==1.1
 Django==1.10.3
 django-nose==1.4.4
 djangorestframework==3.5.3
+djoser==0.5.1
 docopt==0.6.2
 drf-nested-routers==0.11.1
 flake8==3.2.1

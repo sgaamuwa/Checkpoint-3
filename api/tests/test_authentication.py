@@ -12,7 +12,7 @@ class TestAuthentication(test_setup.BaseTestCase):
         """test that a user is created and added to the database"""
         self.assertEqual(User.objects.count(), 2)
         response = self.client.post(
-            "/auth/register",
+            "/auth/register/",
             {"username": "monreal", "password": "pass123"},
             format="json"
         )
@@ -23,20 +23,20 @@ class TestAuthentication(test_setup.BaseTestCase):
         """test cant register a user that already exists"""
         self.assertEqual(User.objects.count(), 2)
         response = self.client.post(
-            "/auth/register",
+            "/auth/register/",
             {"username": "samuel", "password": "pass123"},
             format="json"
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(
-            {'username': ['Username already exists']},
+            {'username': ['A user with that username already exists.']},
             response.data
         )
         self.assertEqual(User.objects.count(), 2)
 
     def test_register_user_no_data(self):
         response = self.client.post(
-            "/auth/register",
+            "/auth/register/",
             {"username": "", "password": ""},
             format="json"
         )
@@ -53,7 +53,7 @@ class TestAuthentication(test_setup.BaseTestCase):
         """test that a created user can log into the system"""
         # login the user
         response = self.client.post(
-            "/auth/login",
+            "/auth/login/",
             {"username": "samuel", "password": "pass123"},
             format="json"
         )
@@ -62,12 +62,12 @@ class TestAuthentication(test_setup.BaseTestCase):
     def test_login_unregistered_user(self):
         """test that cant login unregistered users"""
         response = self.client.post(
-            "/auth/login",
+            "/auth/login/",
             {'username': 'monreal', 'password': 'pass123'},
             format="json"
         )
         self.assertEqual(
-            ['Unable to log in with provided credentials.'],
+            ['Unable to login with provided credentials.'],
             response.data["non_field_errors"]
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -75,18 +75,18 @@ class TestAuthentication(test_setup.BaseTestCase):
     def test_login_with_bad_data(self):
         """test cant login without correct credentials"""
         response = self.client.post(
-            "/auth/login",
+            "/auth/login/",
             {"username": "samuel", "password": "pass"},
             format="json"
         )
         self.assertEqual(
-            ['Unable to log in with provided credentials.'],
+            ['Unable to login with provided credentials.'],
             response.data["non_field_errors"]
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         # test login without data
         response = self.client.post(
-            "/auth/login",
+            "/auth/login/",
             {"username": "", "password": ""},
             format="json"
         )

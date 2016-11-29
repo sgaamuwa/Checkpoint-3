@@ -1,22 +1,12 @@
 from api.models import Bucketlist, Item
 from api.permissions import IsOwner
 from api.serializers import (
-    UserSerializer,
     BucketlistSerializer,
     BucketlistItemSerializer
 )
-from django.contrib.auth.models import User
 from rest_framework import generics, exceptions
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
-
-
-class UserCreate(generics.CreateAPIView):
-    """View set for List, Get, Update, Delete and Create
-    users in the database
-    """
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
 
 
 class BucketlistList(generics.ListCreateAPIView):
