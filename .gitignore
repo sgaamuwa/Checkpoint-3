@@ -6,3 +6,4 @@ __pycache__/
 # Databases
 *.sqlite3
 
+.bash_profile
