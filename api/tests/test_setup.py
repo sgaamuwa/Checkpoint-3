@@ -13,11 +13,11 @@ class BaseTestCase(APITestCase):
         self.client = APIClient()
         self.client_2 = APIClient()
         # add two users to the system
-        self.user_1 = User.objects.create(
+        self.user_1 = User.objects.create_user(
             username="samuel",
             password="pass123"
         )
-        self.user_2 = User.objects.create(
+        self.user_2 = User.objects.create_user(
             username="marvin",
             password="pass123"
         )

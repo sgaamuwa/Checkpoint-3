@@ -1,33 +1,80 @@
 from api.models import Bucketlist, Item
-from api.serializers import UserSerializer, BucketlistSerializer,
-BucketlistItemSerializer
+from api.permissions import IsOwner
+from api.serializers import (
+    UserSerializer,
+    BucketlistSerializer,
+    BucketlistItemSerializer
+)
 from django.contrib.auth.models import User
-from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework import generics, exceptions
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 
 
-class UserViewSet(viewsets.ViewSet):
-    """View set for List, Get, Update, Delete and Create 
+class UserCreate(generics.CreateAPIView):
+    """View set for List, Get, Update, Delete and Create
     users in the database
     """
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
-class BucketlistViewSet(viewsets.ViewSet):
-    """View set for List, Get, Update, Delete and Create 
-    Bucketlists in the database
+class BucketlistList(generics.ListCreateAPIView):
+    """View for Listing and Creation of Bucketlists
+    in the database, requires authentication and ownership
+    """
+    serializer_class = BucketlistSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsOwner, IsAuthenticated,)
+
+    def get_queryset(self):
+        # return only bucketlists for the given user
+        user = self.request.user
+        return Bucketlist.objects.filter(created_by=user.id)
+
+    def perform_create(self, serializer):
+        # pass the request user to the serializer
+        serializer.save(created_by=self.request.user)
+
+
+class BucketlistDetail(generics.RetrieveUpdateDestroyAPIView):
+    """View for Get, Update and Deletion of Bucketlists
+    in the database, requires authentication and ownership
     """
     queryset = Bucketlist.objects.all()
     serializer_class = BucketlistSerializer
-    authentication_classes = (TokenAuthentication)
-    permission_classes = []
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsOwner, IsAuthenticated,)
 
 
-class BucketlistItemViewSet(viewsets.ViewSet):
-    """View set for List, Get, Update, Delete and Create 
+class BucketlistItemCreate(generics.CreateAPIView):
+    """View set for List, Get, Update, Delete and Create
+    BucketlistItems in the database
+    """
+    serializer_class = BucketlistItemSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsOwner, IsAuthenticated,)
+
+    def perform_create(self, serializer):
+        # parse the bucketlist to which it belongs
+        bucketlist_id = self.kwargs.get("pk")
+        try:
+            bucketlist = Bucketlist.objects.get(id=bucketlist_id)
+        except:
+            raise exceptions.NotFound()
+        if bucketlist.created_by == self.request.user:
+            serializer.save(bucketlist=bucketlist)
+        else:
+            raise exceptions.PermissionDenied(
+                "You do not have permission to perform this action."
+            )
+
+
+class BucketlistItemDetail(generics.UpdateAPIView, generics.DestroyAPIView):
+    """View set for List, Get, Update, Delete and Create
     BucketlistItems in the database
     """
     queryset = Item.objects.all()
     serializer_class = BucketlistItemSerializer
-    permission_classes = []
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsOwner, IsAuthenticated,)
