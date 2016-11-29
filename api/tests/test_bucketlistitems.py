@@ -33,7 +33,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_bucketlistitem_unauthorized(self):
-        """test cant create bucketlistitem without a name"""
+        """test cant create bucketlistitem without Authentication"""
         self.client.credentials()
         response = self.client.post(
             "/bucketlists/1/items/",
