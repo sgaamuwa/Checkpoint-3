@@ -37,11 +37,22 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # installed apps
+    'django_nose',
     # rest framework apps
     'rest_framework',
     'rest_framework.authtoken',
     # custom apps
     'api'
+]
+
+# For running nose tests
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# Nose test arguments
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=api',
 ]
 
 MIDDLEWARE = [

@@ -98,4 +98,3 @@ class TestAuthentication(test_setup.BaseTestCase):
             response.data
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
