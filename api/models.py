@@ -17,6 +17,9 @@ class Bucketlist(models.Model):
     class Meta:
         unique_together = ('created_by', 'name')
 
+    def __str__(self):
+        return self.name
+
 
 class Item(models.Model):
     """Model for the item"""
@@ -33,3 +36,6 @@ class Item(models.Model):
 
     class Meta:
         unique_together = ('bucketlist', 'name')
+
+    def __str__(self):
+        return self.name
