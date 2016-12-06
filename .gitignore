@@ -7,3 +7,11 @@ __pycache__/
 *.sqlite3
 
 .bash_profile
+
+.DS_Store
+node_modules/
+typings/
+*component.js
+*js.map
+*module.js
+main.js
