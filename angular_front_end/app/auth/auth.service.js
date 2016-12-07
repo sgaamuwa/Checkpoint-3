@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
+require('rxjs/add/operator/map');
 var AuthService = (function () {
     function AuthService(_http) {
         this._http = _http;
@@ -18,16 +19,19 @@ var AuthService = (function () {
         this.headers.append('Content-Type', 'application/json');
     }
     AuthService.prototype.loginUser = function (username, password) {
-        this._http.post((this.actionUrl + "login/"), JSON.stringify({ username: username, password: password }), { headers: this.headers })
-            .subscribe(function (data) {
-            if (data.json().auth_token) {
-                window.localStorage.setItem('auth_token', data.json().auth_token);
+        return this._http.post((this.actionUrl + "login/"), JSON.stringify({ username: username, password: password }), { headers: this.headers })
+            .map(function (res) {
+            if (res.json().auth_token) {
+                window.localStorage.setItem('auth_token', res.json().auth_token);
+                return res.json().auth_token;
             }
         });
     };
     AuthService.prototype.registerUser = function (username, password) {
         return this._http.post((this.actionUrl + "register/"), JSON.stringify({ username: username, password: password }), { headers: this.headers })
-            .subscribe(function (data) { data.json().username; });
+            .map(function (res) {
+            return res.json().username;
+        });
     };
     AuthService = __decorate([
         core_1.Injectable(), 

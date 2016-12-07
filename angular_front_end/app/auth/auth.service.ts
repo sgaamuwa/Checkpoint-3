@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Http, Headers } from "@angular/http";
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class AuthService {
@@ -14,13 +15,14 @@ export class AuthService {
     }
 
     loginUser(username: string, password: string){
-       this._http.post(
+       return this._http.post(
             (this.actionUrl+"login/"),
             JSON.stringify({ username, password }),
             {headers: this.headers})
-            .subscribe((data) => {
-                if(data.json().auth_token) {
-                    window.localStorage.setItem('auth_token', data.json().auth_token);
+            .map((res) => {
+                if(res.json().auth_token) {
+                    window.localStorage.setItem('auth_token', res.json().auth_token);
+                    return res.json().auth_token;
                 }
             });
     }
@@ -30,6 +32,8 @@ export class AuthService {
             (this.actionUrl+"register/"),
             JSON.stringify({ username, password }),
             {headers: this.headers})
-            .subscribe((data) => {data.json().username});
+            .map((res) => {
+                return res.json().username;
+            });
     }
 }
