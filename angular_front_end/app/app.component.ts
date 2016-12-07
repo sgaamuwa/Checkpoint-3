@@ -2,13 +2,11 @@ import { Component } from '@angular/core';
 
 @Component({
 	selector: 'my-app',
-	template: `<h3 class="jumbotron text-center"> 
-	                Hello World, Welcome to {{description}}
-	          </h3>
-	          `
+	moduleId: module.id,
+	templateUrl: "app.component.html"
 })
 
 export class AppComponent{
-	public description: string = 'Angular 2 Boilerplate'
+	public description: string = "Ebyokola"
 
 }

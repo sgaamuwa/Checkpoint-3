@@ -1,0 +1,14 @@
+<div class="jumbotron">
+    <div *ngIf="register">
+       Email: <input type="text" [(ngModel)]="email">
+    </div>
+    <div>
+        Username: <input type="text" [(ngModel)]="username">
+    </div>
+    <br>
+    <div>
+        Password: <input type="password" [(ngModel)]="password">
+    </div>
+    <br>
+    Not Registered? <button (click)="onRegister()">Register</button>
+</div>
