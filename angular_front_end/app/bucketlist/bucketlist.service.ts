@@ -31,16 +31,28 @@ export class BucketlistService {
         return;
     }
 
-    updateBucketlist(): Observable<Bucketlist>{
+    updateBucketlist(name: string): Observable<Bucketlist>{
         return;
     }
 
-    createBucketlist(): Observable<Bucketlist>{
-        return;
+    createBucketlist(name: string): Observable<Bucketlist>{
+        return this._http.post(
+                    this.actionUrl+"bucketlists/",
+                    JSON.stringify({ name }),
+                    {headers: this.headers})
+                .map((response) => response.json())
+                .do(response => console.log('All: ' + JSON.stringify(response)))
+                .catch(this.handleError);
     }
 
-    deleteBucketlist(): void {
-
+    deleteBucketlist(bucketlistId: number){
+        return this._http.delete(
+                    this.actionUrl+"bucketlists/"+bucketlistId,
+                    {headers: this.headers})
+                .map((response) => response.json())
+                .do(response => console.log('All: ' + JSON.stringify(response)))
+                .catch(this.handleError);
+        
     }
 
     updateBucketlistItem(): Observable<Item>{

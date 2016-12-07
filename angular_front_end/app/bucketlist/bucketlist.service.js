@@ -33,13 +33,20 @@ var BucketlistService = (function () {
     BucketlistService.prototype.getOneBucketlist = function () {
         return;
     };
-    BucketlistService.prototype.updateBucketlist = function () {
+    BucketlistService.prototype.updateBucketlist = function (name) {
         return;
     };
-    BucketlistService.prototype.createBucketlist = function () {
-        return;
+    BucketlistService.prototype.createBucketlist = function (name) {
+        return this._http.post(this.actionUrl + "bucketlists/", JSON.stringify({ name: name }), { headers: this.headers })
+            .map(function (response) { return response.json(); })
+            .do(function (response) { return console.log('All: ' + JSON.stringify(response)); })
+            .catch(this.handleError);
     };
-    BucketlistService.prototype.deleteBucketlist = function () {
+    BucketlistService.prototype.deleteBucketlist = function (bucketlistId) {
+        return this._http.delete(this.actionUrl + "bucketlists/" + bucketlistId, { headers: this.headers })
+            .map(function (response) { return response.json(); })
+            .do(function (response) { return console.log('All: ' + JSON.stringify(response)); })
+            .catch(this.handleError);
     };
     BucketlistService.prototype.updateBucketlistItem = function () {
         return;
