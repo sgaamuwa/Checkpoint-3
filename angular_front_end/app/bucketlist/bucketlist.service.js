@@ -9,17 +9,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
+var Observable_1 = require('rxjs/Observable');
 var http_1 = require('@angular/http');
+require('rxjs/add/operator/catch');
+require('rxjs/add/operator/do');
+require('rxjs/add/operator/map');
 4;
 var BucketlistService = (function () {
     function BucketlistService(_http) {
         this._http = _http;
-        this.actionUrl = "http://127.0.0.1:8000";
+        this.token = window.localStorage.getItem('auth_token');
+        this.actionUrl = "http://127.0.0.1:8000/";
+        this.headers = new http_1.Headers();
         this.headers.append('Content-Type', 'application/json');
-        this.headers.append('Authorization', 'Token ' + this.getToken());
+        this.headers.append('Authorization', 'Token ' + this.token);
     }
     BucketlistService.prototype.getBucketlists = function () {
-        return;
+        return this._http.get(this.actionUrl + "bucketlists/", { headers: this.headers })
+            .map(function (response) { return response.json(); })
+            .do(function (data) { return console.log('All: ' + JSON.stringify(data)); })
+            .catch(this.handleError);
     };
     BucketlistService.prototype.getOneBucketlist = function () {
         return;
@@ -40,8 +49,9 @@ var BucketlistService = (function () {
     };
     BucketlistService.prototype.deleteBucketlistItem = function () {
     };
-    BucketlistService.prototype.getToken = function () {
-        return;
+    BucketlistService.prototype.handleError = function (error) {
+        console.error(error);
+        return Observable_1.Observable.throw(error.json().error || 'Server error');
     };
     BucketlistService = __decorate([
         core_1.Injectable(), 

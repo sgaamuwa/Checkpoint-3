@@ -15,9 +15,10 @@ import { BucketlistDetailComponent } from './bucketlist/bucketlist-detail.compon
     FormsModule,
     HttpModule,
     RouterModule.forRoot([
+      { path: 'auth', component: AuthComponent },
       { path: 'bucketlists', component: BucketlistComponent },
       { path: 'bucketlists/:id', component: BucketlistDetailComponent },
-      { path: '', redirectTo: 'welcome', pathMatch: 'full' },
+      { path: '', redirectTo: 'auth', pathMatch: 'full' },
       { path: '**', redirectTo: 'welcome', pathMatch: 'full'}
     ]) 
   ],

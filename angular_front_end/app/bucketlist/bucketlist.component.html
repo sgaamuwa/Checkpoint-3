@@ -1,0 +1,23 @@
+<div>
+    <p><a href="#" >Create Bucketlist</a></p>
+</div>
+<div>
+    <p>Your bucketlists</p>
+    <table class="table" *ngIf="bucketlists && bucketlists.length">
+        <thead>
+         <tr>
+            <td>Name</td>
+            <td>Date Created</td>
+            <td>Date Modified</td>
+        </tr>
+        </thead>
+       <tbody>
+           <tr *ngFor="let bucketlist of bucketlists">
+               <td>{{bucketlist.name}}</td>
+               <td>{{bucketlist.date_created}}</td>
+               <td>{{bucketlist.date_modified}}</td>
+           </tr>
+       </tbody>
+    </table>
+    <p *ngIf="!bucketlists"> You have no bucketlists</p>
+</div>
