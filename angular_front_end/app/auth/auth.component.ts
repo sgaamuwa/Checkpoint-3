@@ -5,6 +5,7 @@ import { AuthService } from './auth.service';
     selector: 'bl-auth',
     moduleId: module.id,
     templateUrl: "auth.component.html",
+    styleUrls: ["auth.component.css"],
     providers: [AuthService]
 })
 export class AuthComponent {
@@ -12,7 +13,7 @@ export class AuthComponent {
     username: string;
     password: string;
     email: string;
-    register: boolean = false;
+    login: boolean = true;
 
     constructor(private _authService: AuthService){
 
@@ -27,6 +28,10 @@ export class AuthComponent {
     }
 
     onRegister(): void {
-        this.register = true;
+        this.login = false;
+    }
+
+    onLogin(): void{
+        this.login = true;
     }
 }
