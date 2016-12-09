@@ -1,4 +1,5 @@
 export interface Bucketlist{
+    id: number;
     name: string;
     date_created: string;
     date_modified: string;
@@ -7,6 +8,7 @@ export interface Bucketlist{
 }
 
 export interface Item{
+    id: number;
     name: string;
     date_created: string;
     date_modified: string;

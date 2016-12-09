@@ -10,10 +10,9 @@ import { Bucketlist } from './bucketlist';
     providers:[BucketlistService]
 })
 export class BucketlistComponent implements OnInit {
-    pageTitle: string = "Bucketlists"
+    pageTitle: string = "Bucketlists";
     bucketlists: Bucketlist[];
     errorMessage: string;
-    showDelete: boolean = false;
     showItems: boolean = false;
     newBucketlist: string;
 

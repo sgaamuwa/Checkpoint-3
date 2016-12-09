@@ -1,28 +1,34 @@
-<div>
-    <input type="text" class="form-control" [(ngModel)]="newBucketlist">
-    <button class="btn btn-primary" (click)='createBucketlist()'> Create Bucketlist </button>
-</div>
-<div>
-    <p>Your bucketlists</p>
-    <table class="table" *ngIf="bucketlists && bucketlists.length">
-        <thead>
-         <tr>
-            <td>Name</td>
-            <td>Date Created</td>
-            <td>Date Modified</td>
-            <td></td>
-            <td></td>
-        </tr>
-        </thead>
-       <tbody>
-           <tr *ngFor="let bucketlist of bucketlists">
-               <td>{{bucketlist.name}}</td>
-               <td>{{bucketlist.date_created}}</td>
-               <td>{{bucketlist.date_modified}}</td>
-               <td><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></td>
-               <td (click)="deleteBucketlist(bucketlist.id)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></td>
-           </tr>
-       </tbody>
-    </table>
-    <p *ngIf="!bucketlists"> You have no bucketlists</p>
+<div class="container">
+    <div>
+        <input type="text" [(ngModel)]="newBucketlist">
+        <button class="btn btn-primary" (click)='createBucketlist()'> Create Bucketlist </button>
+    </div><br>
+    <div class="panel panel-primary col-md-9">
+        <div class="panel-heading col-md-12" >
+            Your Bucketlists
+        </div>
+        <div class="panel-body">
+            <table class="table" *ngIf="bucketlists && bucketlists.length">
+                <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Date Created</td>
+                        <td>Date Modified</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let bucketlist of bucketlists">
+                        <td><a [routerLink]="['/bucketlists', bucketlist.id]">{{bucketlist.name}}</a></td>
+                        <td>{{bucketlist.date_created}}</td>
+                        <td>{{bucketlist.date_modified}}</td>
+                        <td><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></td>
+                        <td (click)="deleteBucketlist(bucketlist.id)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p *ngIf="bucketlist && bucketlists.length==0"> You have no bucketlists, Create a new one</p>
+        </div>
+    </div>
 </div>
