@@ -69,3 +69,17 @@ class BucketlistItemDetail(generics.UpdateAPIView, generics.DestroyAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsOwner, IsAuthenticated,)
     lookup_field = ('id')
+
+    def perform_update(self, serializer):
+        # parse the bucketlist to which it belongs
+        bucketlist_id = self.kwargs.get("pk")
+        try:
+            bucketlist = Bucketlist.objects.get(id=bucketlist_id)
+        except:
+            raise exceptions.NotFound()
+        if bucketlist.created_by == self.request.user:
+            serializer.save(bucketlist=bucketlist)
+        else:
+            raise exceptions.PermissionDenied(
+                "You do not have permission to perform this action."
+            )
