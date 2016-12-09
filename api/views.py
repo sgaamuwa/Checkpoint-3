@@ -68,3 +68,4 @@ class BucketlistItemDetail(generics.UpdateAPIView, generics.DestroyAPIView):
     serializer_class = BucketlistItemSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsOwner, IsAuthenticated,)
+    lookup_field = ('id')

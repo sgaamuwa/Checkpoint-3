@@ -15,7 +15,7 @@ urlpatterns = [
         BucketlistItemCreate.as_view()
     ),
     url(
-        r'^bucketlists/(?P<pk>[0-9]+)/items/(?P<pk2>[0-9]+)',
+        r'^bucketlists/(?P<pk>[0-9]+)/items/(?P<id>[0-9]+)',
         BucketlistItemDetail.as_view()
     ),
     url(r'^bucketlists/(?P<pk>[0-9]+)', BucketlistDetail.as_view()),
