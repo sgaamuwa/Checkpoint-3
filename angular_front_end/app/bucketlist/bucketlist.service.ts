@@ -27,12 +27,23 @@ export class BucketlistService {
             .catch(this.handleError);
     }
 
-    getOneBucketlist(): Observable<Bucketlist>{
-        return;
+    getOneBucketlist(bucketlistId: number): Observable<Bucketlist>{
+        return this._http.get(
+                    this.actionUrl+"bucketlists/"+bucketlistId,
+                    {headers: this.headers})
+                .map((response) => response.json())
+                .do(response => console.log('All: ' + JSON.stringify(response)))
+                .catch(this.handleError);
     }
 
-    updateBucketlist(name: string): Observable<Bucketlist>{
-        return;
+    updateBucketlist(name: string, bucketlistId: number): Observable<Bucketlist>{
+        return this._http.put(
+                    this.actionUrl+"bucketlists/"+bucketlistId,
+                    JSON.stringify({ name }),
+                    {headers: this.headers})
+                .map((response) => response.json())
+                .do(response => console.log('All: ' + JSON.stringify(response)))
+                .catch(this.handleError);
     }
 
     createBucketlist(name: string): Observable<Bucketlist>{
@@ -55,16 +66,33 @@ export class BucketlistService {
         
     }
 
-    updateBucketlistItem(): Observable<Item>{
-        return;
+    updateBucketlistItem(name: string, bucketlistId: number, itemId: number): Observable<Item>{
+        return this._http.put(
+                    this.actionUrl+"bucketlists/"+bucketlistId+"/items/"+itemId,
+                    JSON.stringify({ name }),
+                    {headers: this.headers})
+                .map((response) => response.json())
+                .do(response => console.log('All: ' + JSON.stringify(response)))
+                .catch(this.handleError);
     }
 
-    createBucketlistItem(): Observable<Item>{
-        return;
+    createBucketlistItem(bucketlistId: number, name: string): Observable<Item>{
+        return this._http.post(
+                    this.actionUrl+"bucketlists/"+bucketlistId+"/items/",
+                    JSON.stringify({ name }),
+                    {headers: this.headers})
+                .map((response) => response.json())
+                .do(response => console.log('All: ' + JSON.stringify(response)))
+                .catch(this.handleError);
     }
 
-    deleteBucketlistItem(): void {
-        
+    deleteBucketlistItem(bucketlistId: number, itemId: number){
+        return this._http.delete(
+                    this.actionUrl+"bucketlists/"+bucketlistId+"/items/"+itemId,
+                    {headers: this.headers})
+                .map((response) => response.json())
+                .do(response => console.log('All: ' + JSON.stringify(response)))
+                .catch(this.handleError);
     }
 
     private handleError(error: Response){

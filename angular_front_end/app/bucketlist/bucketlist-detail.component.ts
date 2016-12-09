@@ -1,11 +1,50 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+import { Bucketlist, Item } from './bucketlist';
+import { BucketlistService } from './bucketlist.service';
 
 @Component({
-    selector: 'bl-detail',
     moduleId: module.id,
     templateUrl: 'bucketlist-detail.component.html',
-    styleUrls: []
+    styleUrls: [],
+    providers: [BucketlistService]
 })
-export class BucketlistDetailComponent {
-    pageTitle: "Bucketlist Details"
+export class BucketlistDetailComponent implements OnInit {
+    pageTitle: string = "Bucketlist Details";
+    bucketlist: Bucketlist;
+    bucketlistName: string;
+    item : Item[];
+    errorMessage: string;
+    newItem: string;
+
+
+    constructor (private _route: ActivatedRoute, private _bucketlistService: BucketlistService) {
+
+    }
+
+    ngOnInit(): void {
+        let id = +this._route.snapshot.params['id'];
+        this._bucketlistService.getOneBucketlist(id).subscribe(
+            bucketlist =>{
+                this.bucketlist = bucketlist;
+                this.bucketlistName = bucketlist.name}, 
+            error => this.errorMessage = <any>error);
+    }
+
+    updateBucketlist(bucketlistId: number): void {
+        this._bucketlistService.updateBucketlist(this.bucketlistName, bucketlistId)
+            .subscribe();
+    }
+
+    createItem(bucketlistId: number): void {
+        this._bucketlistService.createBucketlistItem(bucketlistId, this.newItem)
+            .subscribe();
+    }
+
+    deleteItem(bucketlistId: number, itemId: number): void {
+        this._bucketlistService.deleteBucketlistItem(bucketlistId, itemId)
+            .subscribe((result) => {},
+                        error => this.errorMessage = <any>error);
+    }
 }

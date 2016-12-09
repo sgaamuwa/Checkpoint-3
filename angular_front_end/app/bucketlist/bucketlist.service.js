@@ -30,11 +30,17 @@ var BucketlistService = (function () {
             .do(function (data) { return console.log('All: ' + JSON.stringify(data)); })
             .catch(this.handleError);
     };
-    BucketlistService.prototype.getOneBucketlist = function () {
-        return;
+    BucketlistService.prototype.getOneBucketlist = function (bucketlistId) {
+        return this._http.get(this.actionUrl + "bucketlists/" + bucketlistId, { headers: this.headers })
+            .map(function (response) { return response.json(); })
+            .do(function (response) { return console.log('All: ' + JSON.stringify(response)); })
+            .catch(this.handleError);
     };
-    BucketlistService.prototype.updateBucketlist = function (name) {
-        return;
+    BucketlistService.prototype.updateBucketlist = function (name, bucketlistId) {
+        return this._http.put(this.actionUrl + "bucketlists/" + bucketlistId, JSON.stringify({ name: name }), { headers: this.headers })
+            .map(function (response) { return response.json(); })
+            .do(function (response) { return console.log('All: ' + JSON.stringify(response)); })
+            .catch(this.handleError);
     };
     BucketlistService.prototype.createBucketlist = function (name) {
         return this._http.post(this.actionUrl + "bucketlists/", JSON.stringify({ name: name }), { headers: this.headers })
@@ -48,13 +54,23 @@ var BucketlistService = (function () {
             .do(function (response) { return console.log('All: ' + JSON.stringify(response)); })
             .catch(this.handleError);
     };
-    BucketlistService.prototype.updateBucketlistItem = function () {
-        return;
+    BucketlistService.prototype.updateBucketlistItem = function (name, bucketlistId, itemId) {
+        return this._http.put(this.actionUrl + "bucketlists/" + bucketlistId + "/items/" + itemId, JSON.stringify({ name: name }), { headers: this.headers })
+            .map(function (response) { return response.json(); })
+            .do(function (response) { return console.log('All: ' + JSON.stringify(response)); })
+            .catch(this.handleError);
     };
-    BucketlistService.prototype.createBucketlistItem = function () {
-        return;
+    BucketlistService.prototype.createBucketlistItem = function (bucketlistId, name) {
+        return this._http.post(this.actionUrl + "bucketlists/" + bucketlistId + "/items/", JSON.stringify({ name: name }), { headers: this.headers })
+            .map(function (response) { return response.json(); })
+            .do(function (response) { return console.log('All: ' + JSON.stringify(response)); })
+            .catch(this.handleError);
     };
-    BucketlistService.prototype.deleteBucketlistItem = function () {
+    BucketlistService.prototype.deleteBucketlistItem = function (bucketlistId, itemId) {
+        return this._http.delete(this.actionUrl + "bucketlists/" + bucketlistId + "/items/" + itemId, { headers: this.headers })
+            .map(function (response) { return response.json(); })
+            .do(function (response) { return console.log('All: ' + JSON.stringify(response)); })
+            .catch(this.handleError);
     };
     BucketlistService.prototype.handleError = function (error) {
         console.error(error);

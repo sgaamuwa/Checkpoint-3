@@ -8,6 +8,7 @@ import { AppComponent }  from './app.component';
 import { AuthComponent } from './auth/auth.component';
 import { BucketlistComponent } from './bucketlist/bucketlist.component';
 import { BucketlistDetailComponent } from './bucketlist/bucketlist-detail.component';
+import { ItemDetailComponent } from './bucketlist/item-detail.component';
 
 @NgModule({
   imports: [ 
@@ -26,7 +27,8 @@ import { BucketlistDetailComponent } from './bucketlist/bucketlist-detail.compon
     AppComponent,
     AuthComponent,
     BucketlistComponent,
-    BucketlistDetailComponent 
+    BucketlistDetailComponent,
+    ItemDetailComponent 
   ],
   bootstrap:    [ AppComponent ]
 })
