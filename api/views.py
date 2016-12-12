@@ -1,4 +1,5 @@
 from api.models import Bucketlist, Item
+from api.pagination import BucketlistListPagination
 from api.permissions import IsOwner
 from api.serializers import (
     BucketlistSerializer,
@@ -16,6 +17,7 @@ class BucketlistList(generics.ListCreateAPIView):
     serializer_class = BucketlistSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsOwner, IsAuthenticated,)
+    pagination_class = BucketlistListPagination
 
     def get_queryset(self):
         # return only bucketlists for the given user
