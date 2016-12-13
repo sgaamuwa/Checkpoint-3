@@ -7,7 +7,7 @@ import { BucketlistService } from './bucketlist.service';
 @Component({
     moduleId: module.id,
     templateUrl: 'bucketlist-detail.component.html',
-    styleUrls: [],
+    styleUrls: ['bucketlist-detail.component.css'],
     providers: [BucketlistService]
 })
 export class BucketlistDetailComponent implements OnInit {
@@ -24,6 +24,10 @@ export class BucketlistDetailComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.getBucketlist();
+    }
+
+    getBucketlist(): void{
         let id = +this._route.snapshot.params['id'];
         this._bucketlistService.getOneBucketlist(id).subscribe(
             bucketlist =>{
@@ -34,12 +38,16 @@ export class BucketlistDetailComponent implements OnInit {
 
     updateBucketlist(bucketlistId: number): void {
         this._bucketlistService.updateBucketlist(this.bucketlistName, bucketlistId)
-            .subscribe();
+            .subscribe((result) => {},
+                        error => this.errorMessage = <any>error,
+                        () => this.getBucketlist());
     }
 
     createItem(bucketlistId: number): void {
         this._bucketlistService.createBucketlistItem(bucketlistId, this.newItem)
-            .subscribe();
+            .subscribe((result) => {},
+                        error => this.errorMessage = <any>error,
+                        () => this.getBucketlist());
     }
 
     deleteItem(bucketlistId: number, itemId: number): void {

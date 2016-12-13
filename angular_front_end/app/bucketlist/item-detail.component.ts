@@ -33,4 +33,12 @@ export class ItemDetailComponent implements OnInit{
                 error => this.errorMessage = error
             );
     }
+
+    deleteItem(): void {
+        this._bucketlistService.deleteBucketlistItem(this.bucketlistId, this.item.id)
+            .subscribe(
+                (result) => {},
+                error => this.errorMessage = error
+            )
+    }
 }

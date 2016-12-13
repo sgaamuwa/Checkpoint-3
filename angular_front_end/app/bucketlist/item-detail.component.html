@@ -1,15 +1,16 @@
-<div>
-    <div class="row">
-        <div class="col-md-3">Name:</div>
-        <div class="col-md-6" *ngIf="!edit">{{item.name}}</div>
-        <div class="col-md-6" *ngIf="edit"><input type="text" [(ngModel)]="newItemName"></div>
+ <div class="media">                          
+    <div class="media-body">
+        <div class="col-lg-5 padding-left-0">
+            <h4 class="media-heading" *ngIf="!edit">{{item.name}}</h4>
+            <div class="col-md-6" *ngIf="edit"><input type="text" [(ngModel)]="newItemName"></div> 
+        </div>
+        <div class="col-lg-7 text-right">
+            <ul class="list-inline list-unstyled">
+                <li><a href="javascript:void(0)" (click)="toggleEdit()" class="text-warning" *ngIf="!edit"><span><i class="glyphicon glyphicon-pencil"></i> Edit</span></a></li>
+                <li *ngIf="edit && newItemName != item.name"><button class="btn btn-success btn-xs" (click)="updateItem()">Save</button></li>
+                <li *ngIf="edit"><button class="btn btn-danger btn-xs" (click)="toggleEdit()">Cancel</button></li>
+                <li><a href="javascript:void(0)" (click)="deleteItem()" class="text-danger"><span><i class="glyphicon glyphicon-trash"></i> Delete </span></a></li>
+            </ul>
+        </div>
     </div>
-    <div class="row">
-        <div class="col-md-3">Done:</div>
-        <div class="col-md-6">{{item.done}}</div>
-    </div>
-    <div class="row" (click)="toggleEdit()" aria-disabled="edit"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></div>
-    <div class="row" (click)="deleteItem(bucketlist.id, item.id)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></div>
-    <div class="row" *ngIf="edit && newItemName != item.name"><button class="btn" (click)="updateItem()">Edit</button></div>
-    <div class="row" *ngIf="edit"><button class="btn" (click)="toggleEdit()">Cancel</button></div>
- </div>
+</div>

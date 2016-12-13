@@ -1,34 +1,51 @@
 <div class="container">
-    <div>
+    <div class="row">
         <input type="text" [(ngModel)]="newBucketlist">
         <button class="btn btn-primary" (click)='createBucketlist()'> Create Bucketlist </button>
     </div><br>
-    <div class="panel panel-primary col-md-9">
-        <div class="panel-heading col-md-12" >
-            Your Bucketlists
-        </div>
-        <div class="panel-body">
-            <table class="table" *ngIf="bucketlists && bucketlists.length">
-                <thead>
-                    <tr>
-                        <td>Name</td>
-                        <td>Date Created</td>
-                        <td>Date Modified</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let bucketlist of bucketlists">
-                        <td><a [routerLink]="['/bucketlists', bucketlist.id]">{{bucketlist.name}}</a></td>
-                        <td>{{bucketlist.date_created}}</td>
-                        <td>{{bucketlist.date_modified}}</td>
-                        <td><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></td>
-                        <td (click)="deleteBucketlist(bucketlist.id)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span></td>
-                    </tr>
-                </tbody>
-            </table>
-            <p *ngIf="bucketlist && bucketlists.length==0"> You have no bucketlists, Create a new one</p>
+    <div class="row">
+        <div class="">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-list"></span>Bucket Lists
+                    <div class="pull-right action-buttons">
+                        <div class="btn-group pull-right">
+                            <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                                <span class="glyphicon glyphicon-info-sign" style="margin-right: 0px;"></span>
+                            </button>
+                            <ul class="dropdown-menu slidedown">
+                                <li><a ><span class="glyphicon glyphicon-trash"></span>Delete</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <ul class="list-group" *ngIf="bucketlists && bucketlists.length">
+                        <li class="list-group-item" *ngFor="let bucketlist of bucketlists">
+                            <div class="bucketlist" [routerLink]="['/bucketlists', bucketlist.id]">
+                                <div >{{bucketlist.name}}</div>
+                            </div>
+                            <div class="pull-right action-buttons">
+                                <a href="javascript:void(0)" (click)="deleteBucketlist(bucketlist.id)" class="trash"><span class="glyphicon glyphicon-trash"></span></a>
+                            </div>
+                        </li>
+                    </ul>
+                    <p *ngIf="bucketlist && bucketlists.length==0"> You have no bucketlists, Create a new one</p>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>
+                                Total Count <span class="label label-info">{{count}}</span></h6>
+                        </div>
+                        <div class="col-md-6">
+                            <ul class="pagination pagination-sm pull-right" *ngIf="nextPage != null">
+                                <li><a href="javascript:void(0)">»</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

@@ -6,12 +6,15 @@ import { Bucketlist } from './bucketlist';
 @Component({
     moduleId: module.id,
     templateUrl: 'bucketlist.component.html',
-    styleUrls: [],
+    styleUrls: ['bucketlist.component.css'],
     providers:[BucketlistService]
 })
 export class BucketlistComponent implements OnInit {
     pageTitle: string = "Bucketlists";
     bucketlists: Bucketlist[];
+    count: number;
+    nextPage: string;
+    previousPage: string;
     errorMessage: string;
     showItems: boolean = false;
     newBucketlist: string;
@@ -21,29 +24,32 @@ export class BucketlistComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this._bucketlistService.getBucketlists()
-            .subscribe(bucketlists => this.bucketlists = bucketlists,
-                        error => this.errorMessage = <any>error);
+        this.getBucketlists();
     }
 
-    toggleShowItems(): void {
-        this.showItems = !this.showItems;
+    getBucketlists(): void {
+        this._bucketlistService.getBucketlists()
+            .subscribe(bucketlists => {
+                this.bucketlists = bucketlists.results;
+                this.count = bucketlists.count;
+                this.nextPage = bucketlists.next;
+                this.previousPage = bucketlists.previous;
+                },
+                error => this.errorMessage = <any>error);
     }
 
     createBucketlist(): void {
         this._bucketlistService.createBucketlist(this.newBucketlist).subscribe(
-            (result) => {
-                if (result){
-                    this._router.navigate(['/bucketlists'])
-                }
-            },
-            error => this.errorMessage = <any>error);
+            (result) => {},
+            error => this.errorMessage = <any>error,
+            () => this.getBucketlists());
     }
 
     deleteBucketlist(bucketlistId: number): void {
         this._bucketlistService.deleteBucketlist(bucketlistId).subscribe(
             (result) => {},
-            error => this.errorMessage = <any>error);
+            error => this.errorMessage = <any>error,
+            () => this.getBucketlists());
     }
     
 }
