@@ -5,7 +5,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
 
-import { Bucketlist, Item } from './bucketlist';4
+import { Bucketlist, Item, Result } from './bucketlist';
 
 @Injectable()
 export class BucketlistService {
@@ -20,9 +20,9 @@ export class BucketlistService {
         this.headers.append('Authorization', 'Token ' + this.token);
     }
 
-    getBucketlists(): Observable<Bucketlist[]> {
+    getBucketlists(): Observable<Result> {
         return this._http.get(this.actionUrl+"bucketlists/", {headers: this.headers})
-            .map((response: Response) => <Bucketlist[]>response.json())
+            .map((response: Response) => <Result>response.json())
             .do(data => console.log('All: ' + JSON.stringify(data)))
             .catch(this.handleError);
     }

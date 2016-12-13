@@ -14,3 +14,10 @@ export interface Item{
     date_modified: string;
     done: boolean;
 }
+
+export interface Result{
+    count: number;
+    next: string;
+    previous: string; 
+    results: Bucketlist[];
+}

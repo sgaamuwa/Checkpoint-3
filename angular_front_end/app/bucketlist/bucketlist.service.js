@@ -14,7 +14,6 @@ var http_1 = require('@angular/http');
 require('rxjs/add/operator/catch');
 require('rxjs/add/operator/do');
 require('rxjs/add/operator/map');
-4;
 var BucketlistService = (function () {
     function BucketlistService(_http) {
         this._http = _http;
