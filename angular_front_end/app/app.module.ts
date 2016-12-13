@@ -6,6 +6,8 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent }  from './app.component';
 import { AuthComponent } from './auth/auth.component';
+import { AuthGuard } from './auth/auth.guard';
+import { AuthService } from './auth/auth.service';
 import { BucketlistComponent } from './bucketlist/bucketlist.component';
 import { BucketlistDetailComponent } from './bucketlist/bucketlist-detail.component';
 import { ItemDetailComponent } from './bucketlist/item-detail.component';
@@ -17,8 +19,8 @@ import { ItemDetailComponent } from './bucketlist/item-detail.component';
     HttpModule,
     RouterModule.forRoot([
       { path: 'auth', component: AuthComponent },
-      { path: 'bucketlists', component: BucketlistComponent },
-      { path: 'bucketlists/:id', component: BucketlistDetailComponent },
+      { path: 'bucketlists', component: BucketlistComponent, canActivate: [AuthGuard] },
+      { path: 'bucketlists/:id', component: BucketlistDetailComponent, canActivate: [AuthGuard] },
       { path: '', redirectTo: 'auth', pathMatch: 'full' },
       { path: '**', redirectTo: 'welcome', pathMatch: 'full'}
     ]) 
@@ -30,6 +32,7 @@ import { ItemDetailComponent } from './bucketlist/item-detail.component';
     BucketlistDetailComponent,
     ItemDetailComponent 
   ],
+  providers: [ AuthGuard, AuthService ],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }

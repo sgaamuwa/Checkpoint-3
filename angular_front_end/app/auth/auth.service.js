@@ -10,19 +10,25 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
+var router_1 = require("@angular/router");
 require('rxjs/add/operator/map');
 var AuthService = (function () {
-    function AuthService(_http) {
+    function AuthService(_http, _router) {
         this._http = _http;
+        this._router = _router;
+        this.loggedIn = false;
         this.actionUrl = "http://127.0.0.1:8000/auth/";
         this.headers = new http_1.Headers();
         this.headers.append('Content-Type', 'application/json');
+        this.loggedIn = !!window.localStorage.getItem('auth_token');
     }
     AuthService.prototype.loginUser = function (username, password) {
+        var _this = this;
         return this._http.post((this.actionUrl + "login/"), JSON.stringify({ username: username, password: password }), { headers: this.headers })
             .map(function (res) {
             if (res.json().auth_token) {
                 window.localStorage.setItem('auth_token', res.json().auth_token);
+                _this.loggedIn = true;
                 return res.json().auth_token;
             }
         });
@@ -33,9 +39,17 @@ var AuthService = (function () {
             return res.json().username;
         });
     };
+    AuthService.prototype.logoutUser = function () {
+        window.localStorage.removeItem('auth_token');
+        this.loggedIn = false;
+        this._router.navigate(['/auth']);
+    };
+    AuthService.prototype.isLoggedIn = function () {
+        return this.loggedIn;
+    };
     AuthService = __decorate([
         core_1.Injectable(), 
-        __metadata('design:paramtypes', [http_1.Http])
+        __metadata('design:paramtypes', [http_1.Http, router_1.Router])
     ], AuthService);
     return AuthService;
 }());

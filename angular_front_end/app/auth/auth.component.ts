@@ -7,7 +7,6 @@ import { AuthService } from './auth.service';
     moduleId: module.id,
     templateUrl: "auth.component.html",
     styleUrls: ["auth.component.css"],
-    providers: [AuthService]
 })
 export class AuthComponent {
     pageTitle: string = "Authentication";
