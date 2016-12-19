@@ -12,7 +12,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
         """test that item can be created"""
         self.assertEqual(Item.objects.count(), 2)
         response = self.client.post(
-            "/bucketlists/1/items/",
+            "/api/bucketlists/1/items/",
             {"name": "new_item"},
             format="json"
         )
@@ -22,7 +22,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
     def test_create_bucketlistitem_with_bad_data(self):
         """test cant create bucketlistitem without a name"""
         response = self.client.post(
-            "/bucketlists/1/items/",
+            "/api/bucketlists/1/items/",
             {"name": ""},
             format="json"
         )
@@ -36,7 +36,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
         """test cant create bucketlistitem without Authentication"""
         self.client.credentials()
         response = self.client.post(
-            "/bucketlists/1/items/",
+            "/api/bucketlists/1/items/",
             {"name": "new_item"},
             format="json"
         )
@@ -49,7 +49,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
     def test_create_bucketlistitem_not_owner(self):
         """test cant create a bucketlist item if not owner of bucketlist"""
         response = self.client_2.post(
-            "/bucketlists/1/items/",
+            "/api/bucketlists/1/items/",
             {"name": "new_item"},
             format="json"
         )
@@ -62,7 +62,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
     def test_create_bucketlistitem_for_non_existent_bucketlist(self):
         """test cant create item if bucketlist does not exist"""
         response = self.client.post(
-            "/bucketlists/11/items/",
+            "/api/bucketlists/11/items/",
             {"name": "new_item"},
             format="json"
         )
@@ -72,7 +72,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
     def test_create_bucketlistitem_with_short_name(self):
         """test cant create item with a name less than 2 characters"""
         response = self.client.post(
-            "/bucketlists/1/items/",
+            "/api/bucketlists/1/items/",
             {"name": "d"},
             format="json"
         )
@@ -85,14 +85,14 @@ class TestBucketlistItems(test_setup.BaseTestCase):
     def test_update_bucketlistitem(self):
         """test that a bucketlist item can be updated"""
         response = self.client.put(
-            "/bucketlists/1/items/1",
+            "/api/bucketlists/1/items/1",
             {"name": "new_item"},
             format="json"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # test updating done status
         response = self.client.patch(
-            "/bucketlists/1/items/1",
+            "/api/bucketlists/1/items/1",
             {"done": True},
             format="json"
         )
@@ -101,7 +101,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
     def test_update_bucketlistitem_wrong_bucketlist(self):
         """test cant update a bucketlistitem if bucketlist is wrong"""
         response = self.client.put(
-            "/bucketlists/2/items/1",
+            "/api/bucketlists/2/items/1",
             {"name": "new_item"},
             format="json"
         )
@@ -114,7 +114,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
     def test_update_bucketlistitem_non_existent_bucketlist(self):
         """test cant update item if bucketlist does not exist"""
         response = self.client.put(
-            "/bucketlists/11/items/1",
+            "/api/bucketlists/11/items/1",
             {"name": "new_item"},
             format="json"
         )
@@ -124,7 +124,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
     def test_update_bucketlistitem_not_owner(self):
         """test cant update a bucketlist item if not owner"""
         response = self.client_2.put(
-            "/bucketlists/1/items/1",
+            "/api/bucketlists/1/items/1",
             {"name": "new_item"},
             format="json"
         )
@@ -138,7 +138,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
         """test cant update a bucketlist item if not authentication"""
         self.client.credentials()
         response = self.client.put(
-            "/bucketlists/1/items/1",
+            "/api/bucketlists/1/items/1",
             {"name": "new_item"},
             format="json"
         )
@@ -151,7 +151,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
     def test_update_bucketlistitem_with_no_data(self):
         """test cant udpate without data"""
         response = self.client.put(
-            "/bucketlists/1/items/1",
+            "/api/bucketlists/1/items/1",
             {"name": ""},
             format="json"
         )
@@ -162,7 +162,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         # test updating done status
         response = self.client.patch(
-            "/bucketlists/1/items/1",
+            "/api/bucketlists/1/items/1",
             {"done": ""},
             format="json"
         )
@@ -176,7 +176,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
         """test that an item can be deleted"""
         self.assertEqual(Item.objects.count(), 2)
         response = self.client.delete(
-            "/bucketlists/1/items/1"
+            "/api/bucketlists/1/items/1"
         )
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Item.objects.count(), 1)
@@ -186,7 +186,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
         self.client.credentials()
         self.assertEqual(Item.objects.count(), 2)
         response = self.client.delete(
-            "/bucketlists/1/items/1"
+            "/api/bucketlists/1/items/1"
         )
         self.assertEqual(
             {'detail': 'Authentication credentials were not provided.'},
@@ -199,7 +199,7 @@ class TestBucketlistItems(test_setup.BaseTestCase):
         """test cant delete bucketlistitem if not owner"""
         self.assertEqual(Item.objects.count(), 2)
         response = self.client_2.delete(
-            "/bucketlists/1/items/1"
+            "/api/bucketlists/1/items/1"
         )
         self.assertEqual(
             {'detail': 'You do not have permission to perform this action.'},
