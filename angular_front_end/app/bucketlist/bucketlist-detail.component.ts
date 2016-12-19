@@ -16,7 +16,10 @@ export class BucketlistDetailComponent implements OnInit {
     bucketlistName: string;
     item : Item[];
     errorMessage: string;
+    updateBucketlistError: string;
+    createItemError: string 
     newItem: string;
+    edit: boolean = false;
 
 
     constructor (private _route: ActivatedRoute, private _bucketlistService: BucketlistService) {
@@ -25,6 +28,10 @@ export class BucketlistDetailComponent implements OnInit {
 
     ngOnInit(): void {
         this.getBucketlist();
+    }
+
+    toggleEdit(): void {
+        this.edit = !this.edit;
     }
 
     getBucketlist(): void{
@@ -38,21 +45,22 @@ export class BucketlistDetailComponent implements OnInit {
 
     updateBucketlist(bucketlistId: number): void {
         this._bucketlistService.updateBucketlist(this.bucketlistName, bucketlistId)
-            .subscribe((result) => {},
-                        error => this.errorMessage = <any>error,
-                        () => this.getBucketlist());
+            .subscribe((result) => {
+                            this.updateBucketlistError = null;
+                        },
+                        error => this.updateBucketlistError = <any>error,
+                        () => {
+                            this.toggleEdit();
+                            this.getBucketlist()});
     }
 
     createItem(bucketlistId: number): void {
         this._bucketlistService.createBucketlistItem(bucketlistId, this.newItem)
-            .subscribe((result) => {},
-                        error => this.errorMessage = <any>error,
+            .subscribe((result) => {
+                            this.createItemError = null;
+                            this.newItem = null;
+                        },
+                        error => this.createItemError = <any>error,
                         () => this.getBucketlist());
-    }
-
-    deleteItem(bucketlistId: number, itemId: number): void {
-        this._bucketlistService.deleteBucketlistItem(bucketlistId, itemId)
-            .subscribe((result) => {},
-                        error => this.errorMessage = <any>error);
     }
 }

@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent }  from './app.component';
 import { AuthComponent } from './auth/auth.component';
-import { AuthGuard } from './auth/auth.guard';
+import { AuthGuard, LoginGuard } from './auth/auth.guard';
 import { AuthService } from './auth/auth.service';
 import { BucketlistComponent } from './bucketlist/bucketlist.component';
 import { BucketlistDetailComponent } from './bucketlist/bucketlist-detail.component';
@@ -18,11 +18,11 @@ import { ItemDetailComponent } from './bucketlist/item-detail.component';
     FormsModule,
     HttpModule,
     RouterModule.forRoot([
-      { path: 'auth', component: AuthComponent },
+      { path: 'auth', component: AuthComponent, canActivate: [LoginGuard] },
       { path: 'bucketlists', component: BucketlistComponent, canActivate: [AuthGuard] },
       { path: 'bucketlists/:id', component: BucketlistDetailComponent, canActivate: [AuthGuard] },
-      { path: '', redirectTo: 'auth', pathMatch: 'full' },
-      { path: '**', redirectTo: 'welcome', pathMatch: 'full'}
+      { path: '', redirectTo: 'bucketlists', pathMatch: 'full' },
+      { path: '**', redirectTo: 'bucketlists', pathMatch: 'full'}
     ]) 
   ],
   declarations: [ 
@@ -32,7 +32,7 @@ import { ItemDetailComponent } from './bucketlist/item-detail.component';
     BucketlistDetailComponent,
     ItemDetailComponent 
   ],
-  providers: [ AuthGuard, AuthService ],
+  providers: [ AuthGuard, AuthService, LoginGuard ],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }

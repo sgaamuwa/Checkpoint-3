@@ -1,8 +1,8 @@
 {
-    "name": "Angular2-boilerplate",
+    "name": "Ebyokola",
     "version": "1.0.0",
-    "author": "Migwi Ndung'u",
-    "description": "Simplified version of angular boilerplate",
+    "author": "Samuel Gaamuwa",
+    "description": "Bucketlist Application for Andela Checkpoint 3",
     "scripts": {
         "start": "tsc && concurrently \"tsc -w\" \"lite-server\" ",
         "tsc": "tsc",

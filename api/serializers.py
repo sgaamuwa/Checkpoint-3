@@ -13,7 +13,7 @@ class BucketlistItemSerializer(serializers.ModelSerializer):
         bl_id = self.context['view'].kwargs['pk']
         if len(value.strip()) < 2:
             raise serializers.ValidationError("Name is too short")
-        elif value in [
+        elif value.strip() in [
                 item.name for item in Item.objects.filter(bucketlist=bl_id)
                 ]:
             raise serializers.ValidationError("Name already exists")
@@ -36,7 +36,7 @@ class BucketlistSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         if len(value.strip()) < 2:
             raise serializers.ValidationError("Name is too short")
-        elif value in [
+        elif value.strip() in [
             blist.name for blist in Bucketlist.objects.filter(created_by=user)
                 ]:
             raise serializers.ValidationError("Name already exists")
