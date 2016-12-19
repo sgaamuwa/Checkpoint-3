@@ -14,17 +14,24 @@ var http_1 = require('@angular/http');
 require('rxjs/add/operator/catch');
 require('rxjs/add/operator/do');
 require('rxjs/add/operator/map');
+require('rxjs/add/observable/throw');
 var BucketlistService = (function () {
     function BucketlistService(_http) {
         this._http = _http;
         this.token = window.localStorage.getItem('auth_token');
-        this.actionUrl = "http://127.0.0.1:8000/";
+        this.actionUrl = "http://127.0.0.1:8000/api/";
         this.headers = new http_1.Headers();
         this.headers.append('Content-Type', 'application/json');
         this.headers.append('Authorization', 'Token ' + this.token);
     }
     BucketlistService.prototype.getBucketlists = function () {
         return this._http.get(this.actionUrl + "bucketlists/", { headers: this.headers })
+            .map(function (response) { return response.json(); })
+            .do(function (data) { return console.log('All: ' + JSON.stringify(data)); })
+            .catch(this.handleError);
+    };
+    BucketlistService.prototype.getPage = function (pageUrl) {
+        return this._http.get(pageUrl, { headers: this.headers })
             .map(function (response) { return response.json(); })
             .do(function (data) { return console.log('All: ' + JSON.stringify(data)); })
             .catch(this.handleError);
@@ -49,12 +56,18 @@ var BucketlistService = (function () {
     };
     BucketlistService.prototype.deleteBucketlist = function (bucketlistId) {
         return this._http.delete(this.actionUrl + "bucketlists/" + bucketlistId, { headers: this.headers })
-            .map(function (response) { return response.json(); })
+            .map(function (response) { return response.status; })
             .do(function (response) { return console.log('All: ' + JSON.stringify(response)); })
             .catch(this.handleError);
     };
     BucketlistService.prototype.updateBucketlistItem = function (name, bucketlistId, itemId) {
-        return this._http.put(this.actionUrl + "bucketlists/" + bucketlistId + "/items/" + itemId, JSON.stringify({ name: name }), { headers: this.headers })
+        return this._http.patch(this.actionUrl + "bucketlists/" + bucketlistId + "/items/" + itemId, JSON.stringify({ name: name }), { headers: this.headers })
+            .map(function (response) { return response.json(); })
+            .do(function (response) { return console.log('All: ' + JSON.stringify(response)); })
+            .catch(this.handleError);
+    };
+    BucketlistService.prototype.updateBucketlistItemDone = function (done, bucketlistId, itemId) {
+        return this._http.patch(this.actionUrl + "bucketlists/" + bucketlistId + "/items/" + itemId, JSON.stringify({ done: done }), { headers: this.headers })
             .map(function (response) { return response.json(); })
             .do(function (response) { return console.log('All: ' + JSON.stringify(response)); })
             .catch(this.handleError);
@@ -67,13 +80,13 @@ var BucketlistService = (function () {
     };
     BucketlistService.prototype.deleteBucketlistItem = function (bucketlistId, itemId) {
         return this._http.delete(this.actionUrl + "bucketlists/" + bucketlistId + "/items/" + itemId, { headers: this.headers })
-            .map(function (response) { return response.json(); })
+            .map(function (response) { return response.status; })
             .do(function (response) { return console.log('All: ' + JSON.stringify(response)); })
             .catch(this.handleError);
     };
     BucketlistService.prototype.handleError = function (error) {
-        console.error(error);
-        return Observable_1.Observable.throw(error.json().error || 'Server error');
+        console.error(error.json());
+        return Observable_1.Observable.throw(error.json() || 'Server error');
     };
     BucketlistService = __decorate([
         core_1.Injectable(), 

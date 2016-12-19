@@ -4,6 +4,7 @@ import { Http, Response, Headers } from '@angular/http';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/throw';
 
 import { Bucketlist, Item, Result } from './bucketlist';
 
@@ -14,7 +15,7 @@ export class BucketlistService {
     private token = window.localStorage.getItem('auth_token');
 
     constructor(private _http: Http){
-        this.actionUrl = "http://127.0.0.1:8000/";
+        this.actionUrl = "http://127.0.0.1:8000/api/";
         this.headers = new Headers();
         this.headers.append('Content-Type', 'application/json');
         this.headers.append('Authorization', 'Token ' + this.token);
@@ -22,6 +23,13 @@ export class BucketlistService {
 
     getBucketlists(): Observable<Result> {
         return this._http.get(this.actionUrl+"bucketlists/", {headers: this.headers})
+            .map((response: Response) => <Result>response.json())
+            .do(data => console.log('All: ' + JSON.stringify(data)))
+            .catch(this.handleError);
+    }
+
+    getPage(pageUrl: string): Observable<Result> {
+        return this._http.get(pageUrl, {headers: this.headers})
             .map((response: Response) => <Result>response.json())
             .do(data => console.log('All: ' + JSON.stringify(data)))
             .catch(this.handleError);
@@ -60,16 +68,26 @@ export class BucketlistService {
         return this._http.delete(
                     this.actionUrl+"bucketlists/"+bucketlistId,
                     {headers: this.headers})
-                .map((response) => response.json())
+                .map((response) => response.status)
                 .do(response => console.log('All: ' + JSON.stringify(response)))
                 .catch(this.handleError);
         
     }
 
     updateBucketlistItem(name: string, bucketlistId: number, itemId: number): Observable<Item>{
-        return this._http.put(
+        return this._http.patch(
                     this.actionUrl+"bucketlists/"+bucketlistId+"/items/"+itemId,
                     JSON.stringify({ name }),
+                    {headers: this.headers})
+                .map((response) => response.json())
+                .do(response => console.log('All: ' + JSON.stringify(response)))
+                .catch(this.handleError);
+    }
+
+    updateBucketlistItemDone(done: boolean, bucketlistId: number, itemId: number): Observable<Item>{
+        return this._http.patch(
+                    this.actionUrl+"bucketlists/"+bucketlistId+"/items/"+itemId,
+                    JSON.stringify({ done }),
                     {headers: this.headers})
                 .map((response) => response.json())
                 .do(response => console.log('All: ' + JSON.stringify(response)))
@@ -90,13 +108,13 @@ export class BucketlistService {
         return this._http.delete(
                     this.actionUrl+"bucketlists/"+bucketlistId+"/items/"+itemId,
                     {headers: this.headers})
-                .map((response) => response.json())
+                .map((response) => response.status)
                 .do(response => console.log('All: ' + JSON.stringify(response)))
                 .catch(this.handleError);
     }
 
     private handleError(error: Response){
-        console.error(error);
-        return Observable.throw(error.json().error || 'Server error');
+        console.error(error.json());
+        return Observable.throw(error.json() || 'Server error');
     }
 }

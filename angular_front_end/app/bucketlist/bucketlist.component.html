@@ -1,7 +1,10 @@
 <div class="container">
     <div class="row">
-        <input type="text" [(ngModel)]="newBucketlist">
-        <button class="btn btn-primary" (click)='createBucketlist()'> Create Bucketlist </button>
+        <div class="col-md-9"><input type="text" class="form-control" [(ngModel)]="newBucketlist"></div>
+        <div class="col-md-3"><button class="btn btn-primary" (click)='createBucketlist()'> Create Bucketlist </button></div> 
+    </div><br>
+    <div class="row" *ngIf="createBucketlistError">
+        <div class="col-md-9 alert alert-danger alert-xs">{{createBucketlistError.name[0]}}</div>
     </div><br>
     <div class="row">
         <div class="">
@@ -39,8 +42,9 @@
                                 Total Count <span class="label label-info">{{count}}</span></h6>
                         </div>
                         <div class="col-md-6">
-                            <ul class="pagination pagination-sm pull-right" *ngIf="nextPage != null">
-                                <li><a href="javascript:void(0)">»</a></li>
+                            <ul class="pagination pagination-sm pull-right" >
+                                <li><a href="javascript:void(0)" (click)="getPreviousPage()" *ngIf="previousPage != null"><span class="glyphicon glyphicon-chevron-left"></span></a></li>
+                                <li><a href="javascript:void(0)" (click)="getNextPage()" *ngIf="nextPage != null"><span class="glyphicon glyphicon-chevron-right"></span></a></li>
                             </ul>
                         </div>
                     </div>

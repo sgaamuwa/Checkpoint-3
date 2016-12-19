@@ -15,6 +15,7 @@ export class BucketlistComponent implements OnInit {
     count: number;
     nextPage: string;
     previousPage: string;
+    createBucketlistError: string;
     errorMessage: string;
     showItems: boolean = false;
     newBucketlist: string;
@@ -40,8 +41,11 @@ export class BucketlistComponent implements OnInit {
 
     createBucketlist(): void {
         this._bucketlistService.createBucketlist(this.newBucketlist).subscribe(
-            (result) => {},
-            error => this.errorMessage = <any>error,
+            (result) => {
+                this.createBucketlistError = null;
+                this.newBucketlist = null;
+            },
+            error => this.createBucketlistError = <any>error,
             () => this.getBucketlists());
     }
 
@@ -50,6 +54,28 @@ export class BucketlistComponent implements OnInit {
             (result) => {},
             error => this.errorMessage = <any>error,
             () => this.getBucketlists());
+    }
+
+    getNextPage(): void {
+        this._bucketlistService.getPage(this.nextPage)
+            .subscribe(bucketlists => {
+                    this.bucketlists = bucketlists.results;
+                    this.count = bucketlists.count;
+                    this.nextPage = bucketlists.next;
+                    this.previousPage = bucketlists.previous;
+                    },
+                    error => this.errorMessage = <any>error);
+    }
+
+    getPreviousPage(): void {
+        this._bucketlistService.getPage(this.previousPage)
+            .subscribe(bucketlists => {
+                    this.bucketlists = bucketlists.results;
+                    this.count = bucketlists.count;
+                    this.nextPage = bucketlists.next;
+                    this.previousPage = bucketlists.previous;
+                    },
+                    error => this.errorMessage = <any>error);
     }
     
 }
