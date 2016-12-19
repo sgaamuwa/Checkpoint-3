@@ -10,14 +10,18 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
+var Observable_1 = require('rxjs/Observable');
 var router_1 = require("@angular/router");
+require('rxjs/add/operator/catch');
+require('rxjs/add/operator/do');
 require('rxjs/add/operator/map');
+require('rxjs/add/observable/throw');
 var AuthService = (function () {
     function AuthService(_http, _router) {
         this._http = _http;
         this._router = _router;
         this.loggedIn = false;
-        this.actionUrl = "http://127.0.0.1:8000/auth/";
+        this.actionUrl = "http://127.0.0.1:8000/api/auth/";
         this.headers = new http_1.Headers();
         this.headers.append('Content-Type', 'application/json');
         this.loggedIn = !!window.localStorage.getItem('auth_token');
@@ -31,13 +35,17 @@ var AuthService = (function () {
                 _this.loggedIn = true;
                 return res.json().auth_token;
             }
-        });
+        })
+            .do(function (data) { return console.log('All: ' + JSON.stringify(data)); })
+            .catch(this.handleError);
     };
     AuthService.prototype.registerUser = function (username, password) {
         return this._http.post((this.actionUrl + "register/"), JSON.stringify({ username: username, password: password }), { headers: this.headers })
             .map(function (res) {
             return res.json().username;
-        });
+        })
+            .do(function (data) { return console.log('All: ' + JSON.stringify(data)); })
+            .catch(this.handleError);
     };
     AuthService.prototype.logoutUser = function () {
         window.localStorage.removeItem('auth_token');
@@ -46,6 +54,10 @@ var AuthService = (function () {
     };
     AuthService.prototype.isLoggedIn = function () {
         return this.loggedIn;
+    };
+    AuthService.prototype.handleError = function (error) {
+        console.error(error.json());
+        return Observable_1.Observable.throw(error.json() || 'Server error');
     };
     AuthService = __decorate([
         core_1.Injectable(), 

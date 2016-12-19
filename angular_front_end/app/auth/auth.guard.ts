@@ -16,3 +16,18 @@ export class AuthGuard implements CanActivate{
         return false;
     }
 }
+
+@Injectable()
+export class LoginGuard implements CanActivate{
+    constructor(private _authService: AuthService, private _router: Router){
+
+    }
+
+    canActivate(): boolean {
+        if(!this._authService.isLoggedIn()){
+            return true;
+        };
+        this._router.navigate(['/bucketlists']);
+        return false;
+    }
+}

@@ -31,4 +31,24 @@ var AuthGuard = (function () {
     return AuthGuard;
 }());
 exports.AuthGuard = AuthGuard;
+var LoginGuard = (function () {
+    function LoginGuard(_authService, _router) {
+        this._authService = _authService;
+        this._router = _router;
+    }
+    LoginGuard.prototype.canActivate = function () {
+        if (!this._authService.isLoggedIn()) {
+            return true;
+        }
+        ;
+        this._router.navigate(['/bucketlists']);
+        return false;
+    };
+    LoginGuard = __decorate([
+        core_1.Injectable(), 
+        __metadata('design:paramtypes', [auth_service_1.AuthService, router_1.Router])
+    ], LoginGuard);
+    return LoginGuard;
+}());
+exports.LoginGuard = LoginGuard;
 //# sourceMappingURL=auth.guard.js.map
