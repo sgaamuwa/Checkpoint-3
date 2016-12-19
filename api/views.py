@@ -40,7 +40,7 @@ class BucketlistDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class BucketlistItemCreate(generics.CreateAPIView):
-    """View for Creating Bucketlist Items, 
+    """View for Creating Bucketlist Items,
     requires authentication and ownership of the specified bucketlist
     """
     serializer_class = BucketlistItemSerializer
