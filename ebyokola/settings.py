@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     # rest framework apps
     'rest_framework',
     'rest_framework.authtoken',
+    'rest_framework_swagger',
     # custom apps
     'api'
 ]

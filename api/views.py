@@ -40,8 +40,8 @@ class BucketlistDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class BucketlistItemCreate(generics.CreateAPIView):
-    """View set for List, Get, Update, Delete and Create
-    BucketlistItems in the database
+    """View for Creating Bucketlist Items, 
+    requires authentication and ownership of the specified bucketlist
     """
     serializer_class = BucketlistItemSerializer
     authentication_classes = (TokenAuthentication,)
@@ -63,8 +63,8 @@ class BucketlistItemCreate(generics.CreateAPIView):
 
 
 class BucketlistItemDetail(generics.UpdateAPIView, generics.DestroyAPIView):
-    """View set for List, Get, Update, Delete and Create
-    BucketlistItems in the database
+    """View for Updating and Deleting BucketlistItems in the database,
+    Requires authentication and ownership of the item
     """
     queryset = Item.objects.all()
     serializer_class = BucketlistItemSerializer

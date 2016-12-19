@@ -1,4 +1,4 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 from api.views import (
     BucketlistDetail,
     BucketlistItemCreate,
@@ -9,6 +9,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 
 urlpatterns = [
+    url(r'^auth/', include('djoser.urls.authtoken')),
     url(r'^bucketlists/$', BucketlistList.as_view()),
     url(
         r'^bucketlists/(?P<pk>[0-9]+)/items/$',
