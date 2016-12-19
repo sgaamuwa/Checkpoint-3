@@ -1,0 +1,1 @@
+web: gunicorn ebyokola.wsgi --log-file -
