@@ -1,1 +1,1 @@
-web: gunicorn ebyokola.wsgi --log-file -
+web:  source ./build.sh;
