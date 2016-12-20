@@ -10,11 +10,9 @@ The application uses Token Based Authentication for user authentication and auth
 The Ebyokola API is a python/django application and is mainly dependent on the following technologies
 
 * **[Python3](https://www.python.org/download/releases/3.0/)**
-* **[Flask RESTful](http://flask-restful-cn.readthedocs.io/en/0.3.5/)** for route and resource definition
-* **[Flast SQLAlchemy](http://flask-sqlalchemy.pocoo.org/2.1/)** for database interactions
-* **[Werkzeug](http://werkzeug.pocoo.org/docs/0.11/utils/#module-werkzeug.security)** for password security
-* **[Itsdangerous](http://pythonhosted.org/itsdangerous/)** for token based authentication
-* **[Unittest](https://docs.python.org/2/library/unittest.html)**, **[Nose](http://nose.readthedocs.io/en/latest/)** and **[Tox](http://tox.readthedocs.io/en/latest/)** for the testing
+* **[Django Restframework](http://www.django-rest-framework.org/)** for RESTful implementation
+* **[Djoser](https://github.com/sunscrapers/djoser)** for Token Authentication and User Handling
+* **[Unittest](https://docs.python.org/2/library/unittest.html)**, **[Nose](http://nose.readthedocs.io/en/latest/)** for the testing
 
 ### Functionality
 The user of the application has the ability to carry out the following
@@ -22,6 +20,7 @@ The user of the application has the ability to carry out the following
 * Register a new user with the application 
     * Usernames have to be unique for a successful registration
     * Users must provide a password for a successful registration
+    * Users may have an email, but this is optional
     * Usernames and passwords must be minimum 4 characters for successful registration 
     ```
         {
@@ -33,7 +32,6 @@ The user of the application has the ability to carry out the following
 * Login to use the system with the same information above
 
 * Once logged in, the user then requests for token
-    * Each token is valid for 30 minutes after which it is invalid
     * Once logged in, a user can request another token, without having to log back in 
 
 * Users can create new bucketlists each with a unique name with the POST information below
@@ -96,8 +94,8 @@ $ pip install virtualenv
 ```
 Once installed, create a directory for the application called Bucketlist and open it using the commands
 ```
-$ mkdir Bucketlist
-$ cd Bucketlist
+$ mkdir Ebyokola
+$ cd Ebyokola
 ```
 Create a virtual environment for the application that is python3 specific 
 ```
@@ -105,13 +103,19 @@ $ virtualenv -p python3 venv-bucketlist
 ```
 Activate the virtual environment 
 ```
-$ source venv-bucketlist/bin/activate 
+$ source venv-ebyokola/bin/activate 
 ```
 At this point, clone the project into the folder, move into the project directory and run the requirements file
 ```
-$ git clone https://github.com/andela-sgaamuwa/Checkpoint-2.git
-$ cd Checkpoint-2
+$ git clone https://github.com/andela-sgaamuwa/Checkpoint-3.git
+$ cd Checkpoint-3
 $ pip install -r requirements.txt
+```
+Next you need to migrate and set up the database
+The application uses a Postgresql database therefore one should setup the Postgres environment and created a database named ebyokola before these commands
+```
+$ python manage.py makemigrations
+$ python manage.py migrate
 ```
 The application is then ready to run, simply use the command 
 ```
