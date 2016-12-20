@@ -5,6 +5,12 @@ from rest_framework import serializers
 class BucketlistItemSerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=100)
     done = serializers.BooleanField(default=False)
+    date_created = serializers.ReadOnlyField(
+        source="convert_date_created"
+    )
+    date_modified = serializers.ReadOnlyField(
+        source="convert_date_modified"
+    )
 
     def validate_name(self, value):
         """validation method for the name of the Bucketlist Item
@@ -28,6 +34,12 @@ class BucketlistSerializer(serializers.ModelSerializer):
     items = BucketlistItemSerializer(many=True, read_only=True)
     name = serializers.CharField(max_length=100)
     created_by = serializers.ReadOnlyField(source='created_by.id')
+    date_created = serializers.ReadOnlyField(
+        source="convert_date_created"
+    )
+    date_modified = serializers.ReadOnlyField(
+        source="convert_date_modified"
+    )
 
     def validate_name(self, value):
         """validation method for the name of the Bucketlist
