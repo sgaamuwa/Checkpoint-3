@@ -74,6 +74,8 @@ MIDDLEWARE = [
 CORS_ORIGIN_WHITELIST = (
     'localhost:8000',
     'localhost:3000',
+    'ebyokola-ft.herokuapp.com',
+    'ebyokola.herokuapp.com',
 )
 
 ROOT_URLCONF = 'ebyokola.urls'
